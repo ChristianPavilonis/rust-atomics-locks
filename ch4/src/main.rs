@@ -1,27 +1,32 @@
-use std::sync::atomic::{AtomicBool, Ordering};
+use std::{cell::UnsafeCell, sync::atomic::{AtomicBool, Ordering}};
 
 fn main() {
 
 }
 
-struct SpinLock {
+struct SpinLock<T> {
     locked: AtomicBool,
+    value: UnsafeCell<T>,
 }
 
-impl SpinLock {
-    pub const fn new() -> Self {
+unsafe impl<T> Sync for SpinLock<T> where T: Send {}
+
+impl<T> SpinLock<T> {
+    pub const fn new(value: T) -> Self {
         Self {
             locked: AtomicBool::new(false),
+            value: UnsafeCell::new(value),
         }
     }
 
-    pub fn lock(&self) {
+    pub fn lock(&self) -> &mut T {
         while self.locked.swap(true, Ordering::Acquire) {
             std::hint::spin_loop();
         }
+        unsafe { &mut *self.value.get() }
     }
 
-    pub fn unlock(&self) {
+    pub unsafe fn unlock(&self) {
         self.locked.store(false, Ordering::Release);
     }
 }
