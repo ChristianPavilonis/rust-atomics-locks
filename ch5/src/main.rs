@@ -4,6 +4,7 @@ use std::{
 };
 
 mod one_shot;
+mod typed_channel;
 
 fn main() {
     println!("Hello, world!");
