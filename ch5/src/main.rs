@@ -5,6 +5,7 @@ use std::{
 
 mod one_shot;
 mod typed_channel;
+mod typed_lifetimes;
 
 fn main() {
     println!("Hello, world!");
