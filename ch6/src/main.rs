@@ -2,10 +2,6 @@ use std::{ops::Deref, ptr::NonNull, sync::atomic::{fence, AtomicUsize, Ordering:
 
 mod weak;
 
-fn main() {
-    println!("Hello, world!");
-}
-
 pub struct Arc<T> {
     ptr: NonNull<ArcData<T>>,
 }
